@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+#echo "$8" >> fileName_ab
+# check for any missing input parameters
+#if  [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ] || [ -z "$5" ] || [ -z "$6" ] || [ -z "$7" ] || [ -z "$8" ]then
+#echo "called script" >> fileName_empty
+#echo "Invalid inputs."
+#echo -e "Usage: blastp -query <$1> -db <$2> -outfmt <$3> -max_target_seqs <$4> \
+#    -evalue <$5> -out <$6> -remote"
+#exit;
+#else
+#echo "called script" >> fileName_not_empty
+#if [$8 = "online"] 
+#then
+blastp -query $1 -db nr -outfmt $3 -max_target_seqs $4 -evalue $5 -out $6 -remote 
+echo "blastp -query $1 -db nr -outfmt $3 -max_target_seqs $4 -evalue $5 -out $6 -remote" >> fileName_online 
+#else
+#blastp -query $1 -db $2 -outfmt $3 -max_target_seqs $4 -evalue $5 -out $6 -num_threads $7
+#echo "blastp -query $1 -db $2 -outfmt $3 -max_target_seqs $4 -evalue $5 -out $6 -num_threads $7" >> fileName_offline
+#fi
+#fi

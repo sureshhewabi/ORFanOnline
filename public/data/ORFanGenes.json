@@ -1,0 +1,70 @@
+{
+  "data": [
+[
+ "gi|16128551|ref|NP_415100.1",
+ "bacteriophage N4 receptor outer membrane subunit ",
+ "superkingdom ORFan",
+ "Bacteria"
+ ],
+[
+ "gi|16128552|ref|NP_415101.1",
+ "bacteriophage N4 receptor,inner membrane subunit",
+ "superkingdom ORFan",
+ "Bacteria"
+ ],
+[
+ "gi|16128556|ref|NP_415105.1",
+ "periplasmic copper- and silver-binding protein",
+ "superkingdom ORFan",
+ "Bacteria"
+ ],
+[
+ "gi|16128557|ref|NP_415106.1",
+ "copper/silver efflux system membrane fusion protein",
+ "superkingdom ORFan",
+ "Bacteria"
+ ],
+[
+ "gi|90111296|ref|NP_416077.4",
+ "Qin prophage; putative antitermination protein Q",
+ "superkingdom ORFan",
+ "Bacteria"
+ ],
+[
+ "gi|16128555|ref|NP_415104.1",
+ "copper/silver efflux system, outer membrane component",
+ "superkingdom ORFan",
+ "Bacteria"
+ ],
+[
+ "gi|16128942|ref|NP_415495.1",
+ "putative HyaA chaperone",
+ "phylum ORFan",
+ "Proteobacteria"
+ ],
+[
+ "gi|16128985|ref|NP_415540.1",
+ "biofilm PGA synthase PgaCD,regulatory subunit",
+ "phylum ORFan",
+ "Proteobacteria"
+ ],
+[
+ "gi|16129084|ref|NP_415639.1",
+ "inner membrane protein",
+ "phylum ORFan",
+ "Proteobacteria"
+ ],
+[
+ "gi|16129100|ref|NP_415655.1",
+ "e14 prophage; putative SAM-dependent methyltransferase",
+ "phylum ORFan",
+ "Proteobacteria"
+ ],
+[
+ "gi|16129101|ref|NP_415656.1",
+ "e14 prophage; putative inner membrane protein",
+ "phylum ORFan",
+ "Proteobacteria"
+ ]
+  ]
+}

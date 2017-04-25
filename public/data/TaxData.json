@@ -1,0 +1,33 @@
+[{
+    "Taxonomy": ["Taxonomy:root"],
+    "NCBITaxID": "1",
+    "SpeciesName": "root"
+}, {
+    "Taxonomy": ["Taxonomy:Bacteria", "Taxonomy:root"],
+    "NCBITaxID": "2",
+    "SpeciesName": "Bacteria"
+}, {
+    "Taxonomy": ["Taxonomy:Azorhizobium", "Taxonomy:Bacteria", "Taxonomy:root"],
+    "NCBITaxID": "6",
+    "SpeciesName": "Azorhizobium"
+}, {
+    "Taxonomy": ["Taxonomy:Azorhizobium caulinodans", "Taxonomy:Azorhizobium", "Taxonomy:Bacteria", "Taxonomy:root"],
+    "NCBITaxID": "7",
+    "SpeciesName": "Azorhizobium caulinodans"
+}, {
+    "Taxonomy": ["Taxonomy:Buchnera aphidicola", "Taxonomy:Bacteria", "Taxonomy:root"],
+    "NCBITaxID": "9",
+    "SpeciesName": "Buchnera aphidicola"
+}, {
+    "Taxonomy": ["Taxonomy:Cellvibrio", "Taxonomy:Bacteria", "Taxonomy:root"],
+    "NCBITaxID": "10",
+    "SpeciesName": "Cellvibrio"
+}, {"Taxonomy":["Taxonomy:Escherichia coli str. K-12 substr. MG1655","Taxonomy:Escherichia coli K-12","Taxonomy:Escherichia coli","Taxonomy:Escherichia","Taxonomy:Enterobacteriaceae","Taxonomy:Enterobacteriales","Taxonomy:Gammaproteobacteria","Taxonomy:Proteobacteria","Taxonomy:Bacteria","Taxonomy:cellular organisms"],
+	"NCBITaxID":"511145",
+	"SpeciesName":"Escherichia coli str. K-12 substr. MG1655"
+}, {
+	"Taxonomy":["Taxonomy:Homo sapiens","Taxonomy:Homo","Taxonomy:Hominidae","Taxonomy:Catarrhini","Taxonomy:Primates","Taxonomy:Eutheria","Taxonomy:Sarcopterygii","Taxonomy:Gnathostomata","Taxonomy:Vertebrata","Taxonomy:Chordata","Taxonomy:Eumetazoa","Taxonomy:Eukaryota"],
+ 	"NCBITaxID":"9606",
+ 	"SpeciesName":"Homo sapiens"}
+ ]
+

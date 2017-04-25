@@ -1,0 +1,158 @@
+{
+  "data": [
+[
+    1,
+     "gi|16128551|ref|NP_415100.1",
+     "phylum",
+     "Verrucomicrobia",
+     "Chlamydiae/Verrucomicrobia group"
+],
+[
+    3,
+     "gi|16128551|ref|NP_415100.1",
+     "phylum",
+     "Proteobacteria",
+     "Bacteria"
+],
+[
+    4,
+     "gi|16128551|ref|NP_415100.1",
+     "class",
+     "Spartobacteria",
+     "Verrucomicrobia"
+],
+[
+    5,
+     "gi|16128551|ref|NP_415100.1",
+     "class",
+     "Alphaproteobacteria",
+     "Proteobacteria"
+],
+[
+    6,
+     "gi|16128551|ref|NP_415100.1",
+     "class",
+     "Betaproteobacteria",
+     "Proteobacteria"
+],
+[
+    7,
+     "gi|16128551|ref|NP_415100.1",
+     "class",
+     "Gammaproteobacteria",
+     "Proteobacteria"
+],
+[
+    8,
+     "gi|16128551|ref|NP_415100.1",
+     "order",
+     "Salinisphaerales",
+     "Gammaproteobacteria"
+],
+[
+    9,
+     "gi|16128551|ref|NP_415100.1",
+     "order",
+     "Pleurocapsales",
+     "Cyanobacteria"
+],
+[
+    10,
+     "gi|16128551|ref|NP_415100.1",
+     "order",
+     "Rhodospirillales",
+     "Alphaproteobacteria"
+],
+[
+    11,
+     "gi|16128551|ref|NP_415100.1",
+     "order",
+     "Enterobacteriales",
+     "Gammaproteobacteria"
+],
+[
+    12,
+     "gi|16128551|ref|NP_415100.1",
+     "order",
+     "Alteromonadales",
+     "Gammaproteobacteria"
+],
+[
+    13,
+     "gi|16128551|ref|NP_415100.1",
+     "order",
+     "Chroococcales",
+     "Oscillatoriophycideae"
+],
+[
+    14,
+     "gi|16128551|ref|NP_415100.1",
+     "order",
+     "Neisseriales",
+     "Betaproteobacteria"
+],
+[
+    15,
+     "gi|16128551|ref|NP_415100.1",
+     "order",
+     "Burkholderiales",
+     "Betaproteobacteria"
+],
+[
+    16,
+     "gi|16128551|ref|NP_415100.1",
+     "order",
+     "Chromatiales",
+     "Gammaproteobacteria"
+],
+[
+    17,
+     "gi|16128551|ref|NP_415100.1",
+     "order",
+     "Sphingomonadales",
+     "Alphaproteobacteria"
+],
+[
+    18,
+     "gi|16128551|ref|NP_415100.1",
+     "order",
+     "Nostocales",
+     "Cyanobacteria"
+],
+[
+    19,
+     "gi|16128551|ref|NP_415100.1",
+     "order",
+     "Rhizobiales",
+     "Alphaproteobacteria"
+],
+[
+    20,
+     "gi|16128551|ref|NP_415100.1",
+     "order",
+     "Oceanospirillales",
+     "Gammaproteobacteria"
+],
+[
+    21,
+     "gi|16128551|ref|NP_415100.1",
+     "order",
+     "Vibrionales",
+     "Gammaproteobacteria"
+],
+[
+    22,
+     "gi|16128551|ref|NP_415100.1",
+     "order",
+     "Pseudomonadales",
+     "Gammaproteobacteria"
+],
+[
+    23,
+     "gi|16128551|ref|NP_415100.1",
+     "order",
+     "Xanthomonadales",
+     "Gammaproteobacteria"
+]
+]
+}

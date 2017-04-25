@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+if [ -z "$1" ]
+  then
+    echo "Input file must be specified."
+    echo -e "Usage: extractIdsFromFasta input_file output_file\n \
+	input_file should be in FASTA format."
+    exit;
+fi
+
+if [ -z "$2" ]
+  then
+    echo "Output file must be specified"
+    echo -e "Usage: extractIdsFromFasta input_file output_file\n \
+        input_file should be in FASTA format."
+    exit;
+fi
+
+cd workingdir
+awk '$0~/>/{i=index($0," ");if(i==0){i=length($0)+1;}str=substr($0,2,i-2);print str;}' $1 > $2
+cd ..
