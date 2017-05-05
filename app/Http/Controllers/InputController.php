@@ -43,7 +43,10 @@ class InputController extends Controller
       // if user already logged in
       if ($request->session()->has('username')) {
 
-        // save input gene sequence
+
+
+        // get the time-stamp to create a specific folder
+        // to store analysis results
         //$date = new DateTime();
         //$sessionid = $date->format('U');
         $sessionid = "1492507706";
@@ -56,12 +59,15 @@ class InputController extends Controller
         // if(!file_exists(dirname($inputfile)))
         //   mkdir(dirname($inputfile), 0777, true);
         //
-        // // save input sequence to a file in FASTA format.
+
+        // ============== Preprocessing  ==============
+
+        // 1. save input sequence to a file in FASTA format.
         // file_put_contents($inputfile, $content);
 
-        // create ID File
+        // 2. create ID File
         $IDoutputFile = $userdir."IDFile.id";
-        $extractIdsFromFasta = "/Applications/XAMPP/xamppfiles/htdocs/ORFanOnline/public/scripts/extractIdsFromFasta";
+        $extractIdsFromFasta = config('orfanid.extractIdsFromFasta');
         //shell_exec($extractIdsFromFasta.' '.$inputfile.' '.$IDoutputFile);
 
         // Run BLAST script
@@ -69,7 +75,7 @@ class InputController extends Controller
         # ============== BLASTP Settings ==============
 
         # full file path where blastp programme installed in local computer
-        $blastscript = "/usr/local/ncbi/blast/bin/blastp";
+        $blastscript = config('orfanid.blastprogram');
         # filename of the output file
         $blastoutputFile = $userdir."blastResults.bl";
         # output format - tab delimmeterd file(6)
@@ -108,7 +114,7 @@ class InputController extends Controller
         # orfanFinder output File
         $ORFanFinderOutputfile = $userdir."orfanResults.csv";
 
-        print $userdir."<br>";
+      //  print $userdir."<br>";
 
         #ORFanFinder command
         $ORFanCommand = $ORFanFinder." -query ".$blastoutputFile." -id ".$IDoutputFile." -nodes ".$nodefile." -names ".$namefile." -db ".$database." -tax "."511145"." -threads 4"." -out ".$ORFanFinderOutputfile;
@@ -117,6 +123,7 @@ class InputController extends Controller
         //shell_exec($ORFanCommand);
 
         $orfanGenesList = array();
+        $blastrecordsfullList = array();
 
         if(file_exists($ORFanFinderOutputfile)){
           $handle = fopen($ORFanFinderOutputfile, "r");
@@ -127,38 +134,43 @@ class InputController extends Controller
                 $columns = explode( "\t", $line );
 
                 // first column contains the Gene ID
-                $geneID = $columns[0];
-                print "<hr>";
-                print "Gene ID : ".$geneID;
-                print "<br>";
+                $geneID = substr($columns[0],1,-1);
+                // print "<hr>";
+                // print "Gene ID : ".$geneID;
+                // print "<br>";
                 if ( strpos($columns[1], '-') !== false ) {
                     // split second column to get ORF Gene Level and the Taxonomy Level
                     list($geneLevel,$taxonomyLevel) = explode( " - ", $columns[1]);
-                    $this->extractBlastHits($columns);
+                    $blastrecordsfullList = array_merge($blastrecordsfullList,$this->extractBlastHits($geneID, $columns));
                 } elseif(strpos( $columns[1], 'native gene') !== false ){
                     // split second column to get ORF Gene Level and the Taxonomy Level
                     list($geneLevel,$taxonomyLevel) =  array($columns[1], '');
-                    $this->extractBlastHits($columns);
+                    $blastrecordsfullList = array_merge($blastrecordsfullList,$this->extractBlastHits($geneID, $columns));
                 }else { // strict ORFan does not have taxonomy or any other details
                     list($geneLevel,$taxonomyLevel) =  array($columns[1], '');
                 }
-                print "Gene Level : ".$geneLevel;
-                print "<br>";
-                print "Taxonomy Level : ".$taxonomyLevel;
-                print "<br>";
+                // print "Gene Level : ".$geneLevel;
+                // print "<br>";
+                // print "Taxonomy Level : ".$taxonomyLevel;
+                // print "<br>";
 
                 $orfanGenes = array($geneID, 'Not Available',$geneLevel,$taxonomyLevel);
                 array_push($orfanGenesList, $orfanGenes);
             }
             fclose($handle);
 
-            print "<br>";
-            print json_encode($orfanGenesList);
+            // print "<br>";
 
             $ORFanGenesFile = $userdir."ORFanGenes.json";
             $content = '{"data":'.json_encode($orfanGenesList).'}';
-            // // save orgon genes in JSON format.
+            // // save orphan genes in JSON format.
              file_put_contents($ORFanGenesFile, $content);
+
+             // Save blast results
+             $blastresultsFile = $userdir."blastresults.json";
+             $blastcontent = '{"data":'.json_encode($blastrecordsfullList).'}';
+             // // save orphan genes in JSON format.
+              file_put_contents($blastresultsFile, $blastcontent);
 
           } else {
             // error opening the file.
@@ -171,9 +183,8 @@ class InputController extends Controller
     }else{
       return redirect('input');
     }
-        print "<br>";
-        print "<br>";
-        return $request->session()->get('username');
+        //return $request->session()->get('username');
+        return view('results');
     }
 
     /**
@@ -221,22 +232,60 @@ class InputController extends Controller
         //
     }
 
-    private function extractBlastHits($columns){
-        //print "Need to extract blast results".implode("<br><br>", $columns).'<br>';
-        $columnlength = count($columns);
-        // for ($i = 2; $i < $columnlength; $i++) {
-        //       $column = $columns[$i];
-        //       //echo $column.'<br><br>';
-        //       preg_match_all("/\[[^\]]*\]/", $column, $rankCountRecord);
-        //       echo "<hr>";
-        //       $bracktedString =  $rankCountRecord[0][0];
-        //
-        //       if (count(explode( ",", $bracktedString)) >= 2) {
-        //            $rankName = explode( ",", $bracktedString)[0];
-        //            $rankCount = explode( ",", $bracktedString )[1];
-        //            echo "rank and count:".$rankName."->".$rankCount;
-        //
-        //        }
-        // }
+    private function extractBlastHits($geneID, $columns){
+
+      $index = 1;
+
+      $blastrecordsList = array();
+
+      $columnlength = count($columns);
+      // print '<br>';
+      // print $columnlength;
+      // print '<br>';
+      if ($columnlength > 2){
+         for ($i = 2; $i < $columnlength-1; $i++) {
+          //  echo "<hr>";
+               $column = $columns[$i];
+              // echo $column;
+              preg_match_all("/\[[^\]]*\]/", $column, $rankCountRecord);
+
+               $bracktedString =  $rankCountRecord[0][0];
+
+              if (count(explode( ",", $bracktedString)) >= 2) {
+                   $rankName = substr(explode( ",", $bracktedString)[0], 1,-1);
+                   $rankCount = substr(explode( ",", $bracktedString )[1], 0, -1);
+                  //  echo '<br>'."rank and count:".$rankName."->".$rankCount.'<br>';
+               }
+
+               $arr = preg_split('/\[.*?\]\s*/',$column);
+               $blasthits = explode( ",", $arr[1]);
+               $numberofhits = count($blasthits);
+               for ($j=0; $j < $numberofhits; $j++) {
+
+                 // make sure each hit has taxonomy name and its parent taxonomy
+                 // Eg:  Include - Salmonella(Enterobacteriaceae)
+                 //      Exlude - (Vibrio)
+                 $taxpair= preg_split('/[a-zA-Z]\(.*?\)\s*/',$blasthits[$j]);
+                 $taxpaircount = count($taxpair);
+                 if($taxpaircount > 1){
+                   // two paires
+                   //print $blasthits[$j].'<br>';
+                    // print "Gene ID : ".$geneID.'<br>';
+                    // print "Rank: ".$rankName.'<br>';
+                    // print "taxonomy : ".explode( "(", $blasthits[$j] )[0].'<br>';
+                    // print "Parent : ".substr(explode( "(", $blasthits[$j] )[1], 0 ,-1).'<br>';
+
+                    $blastrecords = array($index++,
+                                          $geneID,
+                                          $rankName,
+                                          explode( "(", $blasthits[$j] )[0],
+                                          substr(explode( "(", $blasthits[$j] )[1], 0 ,-1));
+                    array_push($blastrecordsList, $blastrecords);
+                  }
+               }
+         }
+      }
+
+      return $blastrecordsList;
     }
 }

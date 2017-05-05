@@ -40,7 +40,7 @@ $(document).ready(
 		Plotly.newPlot('genesummary', data, layout);
 
 		$('#ORFanGenes').DataTable( {
-			"ajax": "data/ORFanGenes.json",
+			"ajax": "users/sureshhewabi@gmail.com/1492507706/ORFanGenes.json",
 			"oLanguage": {
 				"sStripClasses": "",
 				"sSearch": "",
@@ -76,7 +76,7 @@ $(document).ready(
 					"visible": false,
 					"searchable": false
 				}],
-				"ajax": "data/blastresults.json",
+				"ajax": "users/sureshhewabi@gmail.com/1492507706/blastresults.json",
 				"oLanguage": {
 					"sStripClasses": "",
 					"sSearch": "",
