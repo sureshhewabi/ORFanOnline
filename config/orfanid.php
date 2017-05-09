@@ -18,6 +18,25 @@ return [
     |--------------------------------------------------------------------------
     |
     */
-    'extractIdsFromFasta' => '/Applications/XAMPP/xamppfiles/htdocs/ORFanOnline/public/scripts/extractIdsFromFasta'
+
+    'extractIdsFromFasta' => '/Applications/XAMPP/xamppfiles/htdocs/ORFanOnline/public/scripts/extractIdsFromFasta',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Full file path where ORFanFinder programme installed in local computer
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    'ORFanFinder' => '/Users/suresh/Documents/Tools/ORFanFinder/ORFanFinder-1.1.2/src/ORFanFinder/ORFanFinder',
+
+    /*
+    |--------------------------------------------------------------------------
+    | ORFanFInder Database
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    'database' => '/Users/suresh/Documents/Tools/ORFanFinder/ORFanFinder-1.1.2/databases/uniBacteria.hdb'
 
 ];

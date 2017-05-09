@@ -19,28 +19,39 @@ media="screen,projection" />
 <script type="text/javascript" src="js/export/buttons.html5.min.js"></script>
 <script type="text/javascript" src="js/export/buttons.print.min.js"></script>
 
-<title>Orphan Genes Finder</title>
+<title>ORFanID - Results</title>
 
 <script type="text/javascript">
 $(document).ready(
 	function() {
-		var data = [ {
-			x : [ 'class', 'superkingdom', 'phylum', 'family', 'genus',
-			'species', 'strict' ],
-			y : [ 4, 6, 5, 5, 4, 5, 5 ],
-			type : 'bar',
-			marker : {
-				color : '#ef6c00'
-			}
-		} ];
-		var layout = {
-			yaxis: {
-			title: 'Number of Orphan Genes'
-		}}
-		Plotly.newPlot('genesummary', data, layout);
 
+		var orfanLevels;
+		var numberOfOrphanGenes;
+		var userid = '59112b4254456';
+		console.log("UserID: "+userid);
+
+		$.getJSON('users/'+ userid +'/ORFanGenesSummarychart.json',
+			function(json) {
+				orfanLevels = json.x;
+				numberOfOrphanGenes = json.y;
+
+				var data = [ {
+					x : orfanLevels,
+					y : numberOfOrphanGenes,
+					type : 'bar',
+					marker : {
+						color : '#ef6c00'
+					}
+				} ];
+				var layout = {
+					yaxis: {
+					title: 'Number of Orphan Genes'
+				}}
+				Plotly.newPlot('genesummary', data, layout);
+			}
+		);
 		$('#ORFanGenes').DataTable( {
-			"ajax": "users/sureshhewabi@gmail.com/1492507706/ORFanGenes.json",
+			"ajax": 'users/'+ userid +'/ORFanGenes.json',
 			"oLanguage": {
 				"sStripClasses": "",
 				"sSearch": "",
@@ -60,7 +71,7 @@ $(document).ready(
 			buttons: [['csv', 'print']],
 		});
 		$('#ORFanGenesSummary').DataTable( {
-			"ajax": "data/ORFanGenesSummary.json",
+			"ajax": 'users/'+ userid +'/ORFanGenesSummary.json',
 			"oLanguage": {
 				"sStripClasses": "",
 				"sSearch": "",
@@ -76,7 +87,7 @@ $(document).ready(
 					"visible": false,
 					"searchable": false
 				}],
-				"ajax": "users/sureshhewabi@gmail.com/1492507706/blastresults.json",
+				"ajax": 'users/'+ userid +'/blastresults.json',
 				"oLanguage": {
 					"sStripClasses": "",
 					"sSearch": "",
@@ -116,7 +127,6 @@ $(document).ready(
 	</style>
 
 	<main>
-
 		<div class="row">
 			<div class="col s10 offset-s2">
 				 <span class="new badge" data-badge-caption="nr">Database :</span>
@@ -126,7 +136,6 @@ $(document).ready(
 
 
 		<div class="row">
-
 			<div class="col s5 offset-s1 center-align">
 				<H4> ORFan Genes</H4>
 				<table id="ORFanGenesSummary" class="display" cellspacing="0">
@@ -146,42 +155,42 @@ $(document).ready(
 		</div>
 
 		<div class="divider"></div>
-		<div class="section">
-		<div id="ORFanGenesTable" class="row">
-			<div class="col s10 offset-s1 center-align">
-				<H3> ORFan Genes</H3>
-				<table id="ORFanGenes" class="display" cellspacing="0">
-					<thead>
-						<tr>
-							<th>Gene</th>
-							<th>Description</th>
-							<th>ORFan Gene Level</th>
-							<th>Taxonomy Level</th>
-						</tr>
-					</thead>
-				</table>
-			</div>
-		</div>
+			<div class="section">
+				<div id="ORFanGenesTable" class="row">
+					<div class="col s10 offset-s1 center-align">
+						<H3> ORFan Genes</H3>
+						<table id="ORFanGenes" class="display" cellspacing="0">
+							<thead>
+								<tr>
+									<th>Gene</th>
+									<th>Description</th>
+									<th>ORFan Gene Level</th>
+									<th>Taxonomy Level</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
 			</div>
 
 		<div class="divider"></div>
-<div class="section">
-		<div id="BlastResultsTable" class="row">
-			<div class="col s10 offset-s1 center-align">
-				<H3> Blast Results</H3>
-				<table id="blastresults" class="display" cellspacing="0">
-					<thead>
-						<tr>
-							<th>#</th>
-							<th>Gene</th>
-							<th>Taxonomy Level</th>
-							<th>Taxonomy Name</th>
-							<th>Parent Taxonomy Name</th>
-						</tr>
-					</thead>
-				</table>
-			</div>
-		</div>
+			<div class="section">
+					<div id="BlastResultsTable" class="row">
+						<div class="col s10 offset-s1 center-align">
+							<H3> Blast Results</H3>
+							<table id="blastresults" class="display" cellspacing="0">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>Gene</th>
+										<th>Taxonomy Level</th>
+										<th>Taxonomy Name</th>
+										<th>Parent Taxonomy Name</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+					</div>
 			</div>
 	</main>
 
