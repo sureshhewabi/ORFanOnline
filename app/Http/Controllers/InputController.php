@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DateTime;
+use Cookie;
+use App\Metadata;
 
 class InputController extends Controller
 {
@@ -38,6 +40,11 @@ class InputController extends Controller
      */
     public function store(Request $request)
     {
+      $metadata = new Metadata();
+
+      $cookie = Cookie::make('userid', '59112b4254456');
+      Cookie::queue($cookie);
+
       // retreive data from the input form
       $organism = $request->input('organismName');
       // eg: Escherichia coli str. K-12 substr. MG1655 (511145)
@@ -90,6 +97,11 @@ class InputController extends Controller
         //                "-entrez_query organism+"[Organism]"
 
         //shell_exec($blastcommand);
+
+        // copy blast data to metadata
+        $metadata->blast_evalue = $defalt_maxevalue;
+        $metadata->blast_db = "nr";
+        $metadata->blast_max_hits = $defalt_maxtargetseq;
 
         # ============== Run ORFanFinder ==============
 
@@ -144,11 +156,7 @@ class InputController extends Controller
                 }else { // strict ORFan does not have taxonomy or any other details
                     list($orfanLevel,$taxonomyLevel) =  array($columns[1], '');
                 }
-                // print "Orphan Gene Level : ".$orfanLevel;
-                // print "<br>";
-                // print "Taxonomy Level : ".$taxonomyLevel;
-                // print "<br>";
-
+              
                 $orfanGenes = array($geneID, 'Not Available',$orfanLevel,$taxonomyLevel);
                 array_push($orfanGenesList, $orfanGenes);
 
@@ -202,7 +210,8 @@ class InputController extends Controller
     }else{
       return redirect('input');
     }
-        return view('results');
+
+      return view('results')->with('metadata', $metadata);
     }
 
     /**
@@ -285,14 +294,8 @@ class InputController extends Controller
                  //      Exlude - (Vibrio)
                  $taxpair= preg_split('/[a-zA-Z]\(.*?\)\s*/',$blasthits[$j]);
                  $taxpaircount = count($taxpair);
+                 // if there are two pairs
                  if($taxpaircount > 1){
-                   // two paires
-                   //print $blasthits[$j].'<br>';
-                    // print "Gene ID : ".$geneID.'<br>';
-                    // print "Rank: ".$rankName.'<br>';
-                    // print "taxonomy : ".explode( "(", $blasthits[$j] )[0].'<br>';
-                    // print "Parent : ".substr(explode( "(", $blasthits[$j] )[1], 0 ,-1).'<br>';
-
                     $blastrecords = array($index++,
                                           $geneID,
                                           $rankName,

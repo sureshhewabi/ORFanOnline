@@ -12,6 +12,7 @@ media="screen,projection" />
 <script type="text/javascript" src="js/plotly-latest.min.js"></script>
 <script type="text/javascript" src="js/jquery-1.12.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="js/jquery.cookie.js"></script>
 
 <script type="text/javascript" src="js/export/dataTables.buttons.min.js"></script>
 <script type="text/javascript" src="js/export/buttons.flash.min.js"></script>
@@ -27,7 +28,7 @@ $(document).ready(
 
 		var orfanLevels;
 		var numberOfOrphanGenes;
-		var userid = '59112b4254456';
+		var userid = $('#username').text();
 		console.log("UserID: "+userid);
 
 		$.getJSON('users/'+ userid +'/ORFanGenesSummarychart.json',
@@ -110,6 +111,14 @@ $(document).ready(
 			// add materialize CSS to print buttons
 			$('.buttons-csv').addClass('waves-effect waves-light btn');
 			$('.buttons-print').addClass('waves-effect waves-light btn');
+
+			$('#ORFanGenes').on('click', 'td', function() {
+                // find the row of the table
+                var geneid = $(this).closest('tr').find("td:first").html();
+								console.log(geneid);
+								$('#selectedgeneid').html(geneid);
+
+							});
 		});
 
 		</script>
@@ -127,10 +136,14 @@ $(document).ready(
 	</style>
 
 	<main>
+		<div style="height: 0px;width: 0px;overflow:hidden;">
+			<a href="#" id="username">{{ Cookie::get('userid') }}</a>
+		</div>
 		<div class="row">
 			<div class="col s10 offset-s2">
-				 <span class="new badge" data-badge-caption="nr">Database :</span>
-				  <span class="new badge" data-badge-caption="1e-3">E-value:</span>
+				 <span class="new badge" data-badge-caption='{{ $metadata->blast_db }}'>Database :</span>
+				  <span class="new badge" data-badge-caption='{{ $metadata->blast_evalue }}'>E-value:</span>
+					<span class="new badge" data-badge-caption='{{ $metadata->blast_max_hits }}'>Max blast hits:</span>
 			</div>
     </div>
 
@@ -177,7 +190,8 @@ $(document).ready(
 			<div class="section">
 					<div id="BlastResultsTable" class="row">
 						<div class="col s10 offset-s1 center-align">
-							<H3> Blast Results</H3>
+							<h3> Blast Results</h3>
+							<h6 id="selectedgeneid"></h6>
 							<table id="blastresults" class="display" cellspacing="0">
 								<thead>
 									<tr>
