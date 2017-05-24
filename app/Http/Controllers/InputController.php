@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use DateTime;
 use Cookie;
 use App\Metadata;
+use Log;
 
 class InputController extends Controller
 {
@@ -16,21 +17,18 @@ class InputController extends Controller
      */
     public function index()
     {
-        // assign a unique random ID per analysis
-        session(['userid' => '59112b4254456']);
-        // session(['userid' => uniqid()]);
         return view('input');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+    // /**
+    //  * Show the form for creating a new resource.
+    //  *
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function create()
+    // {
+    //     //
+    // }
 
     /**
      * Store a newly created resource in storage.
@@ -42,8 +40,11 @@ class InputController extends Controller
     {
       $metadata = new Metadata();
 
-      $cookie = Cookie::make('userid', '59112b4254456');
-      Cookie::queue($cookie);
+      // assign a unique random ID per analysis
+      $uniqueID = '5925194687bef'; #uniqid()
+      session(['userid' => $uniqueID]);
+
+      Log::info('New User ID : '.$request->session()->get('userid'));
 
       // retreive data from the input form
       $organism = $request->input('organismName');
@@ -74,7 +75,7 @@ class InputController extends Controller
         $IDoutputFile = $userdir."IDFile.id";
         $extractIdsFromFasta = config('orfanid.extractIdsFromFasta');
 
-        //shell_exec($extractIdsFromFasta.' '.$inputfile.' '.$IDoutputFile);
+      //  shell_exec($extractIdsFromFasta.' '.$inputfile.' '.$IDoutputFile);
 
         # ============== Run BLASTP programme ==============
 
@@ -85,23 +86,23 @@ class InputController extends Controller
         # output format - tab delimmeterd file(6)
         $outfmt = "6";
         # maximum expected value/evalue
-        $defalt_maxevalue = "1e-3";
+        $default_maxevalue = config('orfanid.default_maxevalue');
         # maximum number of target sequence results(number of hits)
-        $defalt_maxtargetseq = "1000";
+        $default_maxtargetseq = $request->input('maxtargets'); #config('orfanid.default_maxtargetseq');
         # number of threads should use, if blastp programme run in local computer
         $defalt_threads = "4";
         # use online blast or blast in local computer
         $defalt_blastmethod = "online";
         # blast command
-        $blastcommand = $blastscript." -query ".$inputfile." -db nr -outfmt 6 -max_target_seqs ".$defalt_maxtargetseq." -evalue ".$defalt_maxevalue." -out ".$blastoutputFile." -remote";
+        $blastcommand = $blastscript." -query ".$inputfile." -db nr -outfmt 6 -max_target_seqs ".$default_maxtargetseq." -evalue ".$default_maxevalue." -out ".$blastoutputFile." -remote";
         //                "-entrez_query organism+"[Organism]"
 
-        //shell_exec($blastcommand);
+      //  shell_exec($blastcommand);
 
         // copy blast data to metadata
-        $metadata->blast_evalue = $defalt_maxevalue;
+        $metadata->blast_evalue = $default_maxevalue;
         $metadata->blast_db = "nr";
-        $metadata->blast_max_hits = $defalt_maxtargetseq;
+        $metadata->blast_max_hits = $default_maxtargetseq;
 
         # ============== Run ORFanFinder ==============
 
@@ -120,7 +121,7 @@ class InputController extends Controller
         $ORFanCommand = $ORFanFinder." -query ".$blastoutputFile." -id ".$IDoutputFile." -nodes ".$nodefile." -names ".$namefile." -db ".$database." -tax ".$organismTaxId." -threads 4"." -out ".$ORFanFinderOutputfile;
 
         # Run ORFanFinder command
-        //shell_exec($ORFanCommand);
+      //  shell_exec($ORFanCommand);
 
         // ============== Report Results ==============
 
@@ -156,7 +157,7 @@ class InputController extends Controller
                 }else { // strict ORFan does not have taxonomy or any other details
                     list($orfanLevel,$taxonomyLevel) =  array($columns[1], '');
                 }
-              
+
                 $orfanGenes = array($geneID, 'Not Available',$orfanLevel,$taxonomyLevel);
                 array_push($orfanGenesList, $orfanGenes);
 
@@ -205,59 +206,56 @@ class InputController extends Controller
         }else{
           print "ORFanFinderOutputfile not available<br>".$ORFanFinderOutputfile."<br>";
         }
-
-
     }else{
       return redirect('input');
     }
-
       return view('results')->with('metadata', $metadata);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+    // /**
+    //  * Display the specified resource.
+    //  *
+    //  * @param  int  $id
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function show($id)
+    // {
+    //     //
+    // }
+    //
+    // /**
+    //  * Show the form for editing the specified resource.
+    //  *
+    //  * @param  int  $id
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function edit($id)
+    // {
+    //     //
+    // }
+    //
+    // /**
+    //  * Update the specified resource in storage.
+    //  *
+    //  * @param  \Illuminate\Http\Request  $request
+    //  * @param  int  $id
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function update(Request $request, $id)
+    // {
+    //     //
+    // }
+    //
+    // /**
+    //  * Remove the specified resource from storage.
+    //  *
+    //  * @param  int  $id
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function destroy($id)
+    // {
+    //     //
+    // }
 
     private function extractBlastHits($geneID, $columns){
 

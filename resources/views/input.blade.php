@@ -6,119 +6,10 @@
 
 @section('body')
 
-<script type="text/javascript">
-	$(document).ready(function() {
+<link type="text/css" rel="stylesheet" href="css/orfanid-input.css">
+<script type="text/javascript" src="js/orfanid-input.js"></script>
 
-				$('#genesequence').trigger('autoresize');
-				$('.modal').modal();
-				$('select').material_select();
-				var organisms = [];
-
-				$.ajax({
-				  url: 'data/TaxData.json',
-				  async: false,
-				  dataType: 'json',
-				  success: function (response) {
-						$.each(response, function(key, val) {
-										var options = "";
-						 				options = val.SpeciesName + '(' + val.NCBITaxID+')';
-										organisms[options] = "null";
-								 });
-				  	 }
-					 });
-				console.log(organisms);
-				$('input.autocomplete').autocomplete({
-					data :organisms,
-					limit : 10 // The max amount of results that can be shown at once. Default: Infinity.
-				});
-
-				var taxonomy = [];
-
-				$( "#organismName" ).change(function() {
-					$.ajax({
-					  url: 'data/TaxData.json',
-					  async: false,
-					  dataType: 'json',
-					  success: function (response) {
-							var selectedOrganism = $('#organismName').val();
-							var regularExpr = /\((.*)\)/;
-
-							var selectedOrganismTaxID = selectedOrganism.match(regularExpr)[1];
-							$.each(response, function(key, val) {
-								var options = "";
-								if(val.NCBITaxID == selectedOrganismTaxID){
-									$('select').empty().html(' ');
-									$.each(val.Taxonomy, function(key, val) {
-										var value = val.substr(9,val.length);
-										$('select').append($("<option></option>").attr("value",value).text(value));
-									});
-									// re-initialize (update)
-									$('select').material_select();
-								}
-							});
-					  },
-						error:function(error){
-							alert(error);
-						}
-					});
-				});
-
-				$('#submit').click(function(){
-					console.log('submit clicked');
-					$('#modal1').modal('open');
-				});
-
-				$('#load-example-data').click(function(){
-					console.log('#example link clicked');
-          $('#genesequence').load('data/Ecoli_511145.fasta');
-          $('#genesequence').addClass('active');
-          $('#organismName').val('Escherichia coli str. K-12 substr. MG1655 (511145)');
-          $.ajax({
-						url: 'data/TaxData.json',
-						async: false,
-						dataType: 'json',
-						success: function (response) {
-							var selectedOrganism = $('#organismName').val();
-							var regularExpr = /\((.*)\)/;
-
-							var selectedOrganismTaxID = selectedOrganism.match(regularExpr)[1];
-							$.each(response, function(key, val) {
-          			var options = "";
-          			if(val.NCBITaxID == selectedOrganismTaxID){
-          				$('select').empty().html(' ');
-          				$.each(val.Taxonomy, function(key, val) {
-	                	var value = val.substr(9,val.length);
-                  	$('select').append($("<option></option>").attr("value",value).text(value));
-                	});
-                	// re-initialize (update)
-                	$('select').material_select();
-                }
-              	});
-              },
-                 error:function(error){
-                 alert(error);
-                 }
-              });
-          $(function() {
-            Materialize.updateTextFields();
-            });
-          return true;
-            });
-   		});
-</script>
 <main>
-
-	<!-- Modal Structure -->
-  <div id="modal1" class="modal">
-    <div class="modal-content">
-      <h4>Modal Header</h4>
-      <p>A bunch of text</p>
-    </div>
-    <div class="modal-footer">
-      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
-    </div>
-  </div>
-
 	{!! Form::open(['route' => 'input.store','method' => 'POST']) !!}
 	<div class="row">
 		<div class="col s12">
@@ -149,9 +40,21 @@
 			</div>
 		</div>
 	</div>
+	<div class="row hidden" id="advanceparameterssection">
+		<div class="col offset-s1 s10">
+			<h6>Advanced parameters:</h6><br>
+			<p class="range-field">
+				<label for="maxevalue">Maximum E-value for BLAST(e-10):</label>
+	     	<input type="range" id="maxevalue"  name="maxevalue" min="1" max="10" value="3"/>
+				<label for="maxtargets">Maximum target sequences for BLAST:</label>
+				<input type="range" id="maxtargets" name="maxtargets" min="100" max="1000" value="{{Config::get('orfanid.default_maxtargetseq')}}"/>
+	   	</p>
+		</div>
+	</div>
 	<div class="row">
-		<div class="col offset-s1 s1">
-			<a id="load-example-data" class="waves-effect waves-light">Example</a>
+		<div class="col offset-s1 s4">
+			<a id="load-example-data" class="waves-effect waves-light">Example</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
+			<a id="advanceparameterslink" class="waves-effect waves-light">Advanced parameters</a>
 		</div>
 		<div class="col offset-s7 s2">
 			<button class="btn waves-effect waves-light" type="submit" name="action" id="submit">Submit

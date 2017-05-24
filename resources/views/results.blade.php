@@ -8,11 +8,13 @@ ORFanID - results
 
 <link type="text/css" rel="stylesheet" href="css/jquery.dataTables.min.css"
 media="screen,projection" />
+<link type="text/css" rel="stylesheet" href="css/orfanid-results.css">
 
 <script type="text/javascript" src="js/plotly-latest.min.js"></script>
 <script type="text/javascript" src="js/jquery-1.12.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/jquery.cookie.js"></script>
+<script type="text/javascript" src="js/orfanid-results.js"></script>
 
 <script type="text/javascript" src="js/export/dataTables.buttons.min.js"></script>
 <script type="text/javascript" src="js/export/buttons.flash.min.js"></script>
@@ -22,122 +24,9 @@ media="screen,projection" />
 
 <title>ORFanID - Results</title>
 
-<script type="text/javascript">
-$(document).ready(
-	function() {
-
-		var orfanLevels;
-		var numberOfOrphanGenes;
-		var userid = $('#username').text();
-		console.log("UserID: "+userid);
-
-		$.getJSON('users/'+ userid +'/ORFanGenesSummarychart.json',
-			function(json) {
-				orfanLevels = json.x;
-				numberOfOrphanGenes = json.y;
-
-				var data = [ {
-					x : orfanLevels,
-					y : numberOfOrphanGenes,
-					type : 'bar',
-					marker : {
-						color : '#ef6c00'
-					}
-				} ];
-				var layout = {
-					yaxis: {
-					title: 'Number of Orphan Genes'
-				}}
-				Plotly.newPlot('genesummary', data, layout);
-			}
-		);
-		$('#ORFanGenes').DataTable( {
-			"ajax": 'users/'+ userid +'/ORFanGenes.json',
-			"oLanguage": {
-				"sStripClasses": "",
-				"sSearch": "",
-				"sSearchPlaceholder": "Enter Search Term Here",
-				"sInfo": "Showing _START_ -_END_ of _TOTAL_ genes",
-				"sLengthMenu": '<span>Rows per page:</span>'+
-				'<select class="browser-default">' +
-				'<option value="5">5</option>' +
-				'<option value="10">10</option>' +
-				'<option value="20">20</option>' +
-				'<option value="50">50</option>' +
-				'<option value="100">100</option>' +
-				'<option value="-1">All</option>' +
-				'</select></div>'
-			},
-			dom: 'frtlipB',
-			buttons: [['csv', 'print']],
-		});
-		$('#ORFanGenesSummary').DataTable( {
-			"ajax": 'users/'+ userid +'/ORFanGenesSummary.json',
-			"oLanguage": {
-				"sStripClasses": "",
-				"sSearch": "",
-				"sSearchPlaceholder": "Enter Search Term Here"
-			},
-			dom: 'frt'
-		});
-
-		$('#blastresults').DataTable( {
-			"columnDefs": [
-				{
-					"targets": [ 1 ],
-					"visible": false,
-					"searchable": false
-				}],
-				"ajax": 'users/'+ userid +'/blastresults.json',
-				"oLanguage": {
-					"sStripClasses": "",
-					"sSearch": "",
-					"sSearchPlaceholder": "Enter Search Term Here",
-					"sInfo": "Showing _START_ -_END_ of _TOTAL_ blast results",
-					"sLengthMenu": '<span>Rows per page:</span>'+
-					'<select class="browser-default">' +
-					'<option value="5">5</option>' +
-					'<option value="10">10</option>' +
-					'<option value="20">20</option>' +
-					'<option value="50">50</option>' +
-					'<option value="100">100</option>' +
-					'<option value="-1">All</option>' +
-					'</select></div>'
-				},
-				dom: 'frtlipB',
-				buttons: [['csv', 'print']]
-			});
-
-			// add materialize CSS to print buttons
-			$('.buttons-csv').addClass('waves-effect waves-light btn');
-			$('.buttons-print').addClass('waves-effect waves-light btn');
-
-			$('#ORFanGenes').on('click', 'td', function() {
-                // find the row of the table
-                var geneid = $(this).closest('tr').find("td:first").html();
-								console.log(geneid);
-								$('#selectedgeneid').html(geneid);
-
-							});
-		});
-
-		</script>
-		<style type="text/css">
-		body {
-			display: flex;
-			min-height: 100vh;
-			flex-direction: column;
-		}
-
-		main {
-			flex: 1 0 auto;
-		}
-	}
-	</style>
-
 	<main>
 		<div style="height: 0px;width: 0px;overflow:hidden;">
-			<a href="#" id="username">{{ Cookie::get('userid') }}</a>
+			<a href="#" id="username">{{ Session::get('userid') }}</a>
 		</div>
 		<div class="row">
 			<div class="col s10 offset-s2">

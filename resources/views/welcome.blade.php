@@ -41,7 +41,7 @@
         <br>
       </div>
     </div>
-    <div class="parallax"><img src="background1.jpg" alt="Unsplashed background img 1"></div>
+    <div class="parallax"><img src="images/background1.jpg" alt="Unsplashed background img 1"></div>
   </div>
   <div class="container">
     <div class="section">
@@ -62,7 +62,7 @@
         </div>
       </div>
     </div>
-    <div class="parallax"><img src="background2.jpg" alt="Unsplashed background img 2"></div>
+    <div class="parallax"><img src="images/background2.jpg" alt="Unsplashed background img 2"></div>
   </div>
   <div class="container">
     <div class="section">
@@ -101,7 +101,7 @@
         </div>
       </div>
     </div>
-    <div class="parallax"><img src="background3.jpg" alt="Unsplashed background img 3"></div>
+    <div class="parallax"><img src="images/background3.jpg" alt="Unsplashed background img 3"></div>
   </div>
     <footer class="page-footer teal">
      <div class="container">
@@ -110,7 +110,7 @@
           <p class="grey-text text-lighten-4">Altschul, S.F., Gish, W., Miller, W., Myers, E.W. &amp; Lipman, D.J. (1990) "Basic local alignment search tool." J. Mol. Biol. 215:403-410</p>
           <p class="grey-text text-lighten-4"> Alex Ekstrom, Yanbin Yin; ORFanFinder: automated identification of taxonomically restricted orphan genes. Bioinformatics 2016; 32 (13): 2053-2055. doi: 10.1093/bioinformatics/btw122 </p>
       </div>
-    </div> 
+    </div>
     <div class="footer-copyright">
       <div class="container"><a class="brown-text text-lighten-3 center-align" href="#"></a>
         <p class="center-align">Copyright &nbsp;© 2017</p>
