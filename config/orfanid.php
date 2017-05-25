@@ -7,7 +7,7 @@ return [
     #'blastprogram' => '/usr/bin/blastp',
 
     # Bash script file that extracts the Gene IDs from the fasta file
-    'extractIdsFromFasta' => '/Applications/XAMPP/xamppfiles/htdocs/ORFanOnline/public/scripts/extractIdsFromFasta',
+    'extractIdsFromFasta' => '/Users/suresh/Documents/Tools/ORFanFinder/ORFanFinder-1.1.2/scripts/extractIdsFromFasta',
     #'extractIdsFromFasta' => '/home/ubuntu/ORFanFinder/ORFanFinder-1.1.2/scripts/extractIdsFromFasta',
 
     # Full file path where ORFanFinder programme installed in local computer

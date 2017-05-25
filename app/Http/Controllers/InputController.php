@@ -55,7 +55,13 @@ class InputController extends Controller
         $IDoutputFile = $userdir."IDFile.id";
         $extractIdsFromFasta = config('orfanid.extractIdsFromFasta');
 
-       shell_exec($extractIdsFromFasta.' '.$inputfile.' '.$IDoutputFile);
+        // initialise to null
+        $out = NULL;
+        $out = shell_exec($extractIdsFromFasta.' '.$inputfile.' '.$IDoutputFile);
+        if( is_null($out) ){
+           Log::debug('extractIdsFromFasta location : '.$extractIdsFromFasta.' '.$inputfile.' '.$IDoutputFile);
+        }
+
 
         # ============== Run BLASTP programme ==============
 
@@ -77,7 +83,13 @@ class InputController extends Controller
         $blastcommand = $blastscript." -query ".$inputfile." -db nr -outfmt 6 -max_target_seqs ".$default_maxtargetseq." -evalue ".$default_maxevalue." -out ".$blastoutputFile." -remote";
         //                "-entrez_query organism+"[Organism]"
 
-       shell_exec($blastcommand);
+       // initialise to null
+       $out = NULL;
+       $out = shell_exec($blastcommand);
+       if( is_null($out) ){
+          Log::warning('No output produced by BLASTP');
+          Log::debug('BLASTP command : '.$blastcommand);
+       }
 
         // copy blast data to metadata
         $metadata->blast_evalue = $default_maxevalue;
@@ -89,9 +101,9 @@ class InputController extends Controller
         # full file path where ORFanFinder programme installed in local computer
         $ORFanFinder = config('orfanid.ORFanFinder');
         #node File
-        $nodefile = public_path()."/data/nodes.txt";
+        $nodefile = config('orfanid.nodefile');
         #name File
-        $namefile = public_path()."/data/names.txt";
+        $namefile = config('orfanid.namefile');
         # database
         $database = config('orfanid.database');
         # orfanFinder output File
@@ -100,8 +112,16 @@ class InputController extends Controller
         #ORFanFinder command
         $ORFanCommand = $ORFanFinder." -query ".$blastoutputFile." -id ".$IDoutputFile." -nodes ".$nodefile." -names ".$namefile." -db ".$database." -tax ".$organismTaxId." -threads 4"." -out ".$ORFanFinderOutputfile;
 
+        // initialise to null
+        $out = NULL;
         # Run ORFanFinder command
-       shell_exec($ORFanCommand);
+        $out = shell_exec($ORFanCommand);
+        if( is_null($out) ){
+           Log::warning('No output produced by ORFanCommand!');
+           Log::debug('ORFanCommand : '.$ORFanCommand);
+        }
+
+
 
         // ============== Report Results ==============
 
