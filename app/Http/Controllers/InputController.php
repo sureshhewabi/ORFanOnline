@@ -10,38 +10,18 @@ use Log;
 
 class InputController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         return view('input');
     }
 
-    // /**
-    //  * Show the form for creating a new resource.
-    //  *
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function create()
-    // {
-    //     //
-    // }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
       $metadata = new Metadata();
 
       // assign a unique random ID per analysis
-      $uniqueID = '5925194687bef'; #uniqid()
+      $uniqueID = uniqid();
       session(['userid' => $uniqueID]);
 
       Log::info('New User ID : '.$request->session()->get('userid'));
@@ -75,7 +55,7 @@ class InputController extends Controller
         $IDoutputFile = $userdir."IDFile.id";
         $extractIdsFromFasta = config('orfanid.extractIdsFromFasta');
 
-      //  shell_exec($extractIdsFromFasta.' '.$inputfile.' '.$IDoutputFile);
+       shell_exec($extractIdsFromFasta.' '.$inputfile.' '.$IDoutputFile);
 
         # ============== Run BLASTP programme ==============
 
@@ -97,7 +77,7 @@ class InputController extends Controller
         $blastcommand = $blastscript." -query ".$inputfile." -db nr -outfmt 6 -max_target_seqs ".$default_maxtargetseq." -evalue ".$default_maxevalue." -out ".$blastoutputFile." -remote";
         //                "-entrez_query organism+"[Organism]"
 
-      //  shell_exec($blastcommand);
+       shell_exec($blastcommand);
 
         // copy blast data to metadata
         $metadata->blast_evalue = $default_maxevalue;
@@ -121,7 +101,7 @@ class InputController extends Controller
         $ORFanCommand = $ORFanFinder." -query ".$blastoutputFile." -id ".$IDoutputFile." -nodes ".$nodefile." -names ".$namefile." -db ".$database." -tax ".$organismTaxId." -threads 4"." -out ".$ORFanFinderOutputfile;
 
         # Run ORFanFinder command
-      //  shell_exec($ORFanCommand);
+       shell_exec($ORFanCommand);
 
         // ============== Report Results ==============
 
@@ -212,51 +192,6 @@ class InputController extends Controller
       return view('results')->with('metadata', $metadata);
     }
 
-    // /**
-    //  * Display the specified resource.
-    //  *
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function show($id)
-    // {
-    //     //
-    // }
-    //
-    // /**
-    //  * Show the form for editing the specified resource.
-    //  *
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function edit($id)
-    // {
-    //     //
-    // }
-    //
-    // /**
-    //  * Update the specified resource in storage.
-    //  *
-    //  * @param  \Illuminate\Http\Request  $request
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function update(Request $request, $id)
-    // {
-    //     //
-    // }
-    //
-    // /**
-    //  * Remove the specified resource from storage.
-    //  *
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function destroy($id)
-    // {
-    //     //
-    // }
-
     private function extractBlastHits($geneID, $columns){
 
       $index = 1;
@@ -264,15 +199,11 @@ class InputController extends Controller
       $blastrecordsList = array();
 
       $columnlength = count($columns);
-      // print '<br>';
-      // print $columnlength;
-      // print '<br>';
+
       if ($columnlength > 2){
          for ($i = 2; $i < $columnlength-1; $i++) {
-          //  echo "<hr>";
                $column = $columns[$i];
-              // echo $column;
-              preg_match_all("/\[[^\]]*\]/", $column, $rankCountRecord);
+               preg_match_all("/\[[^\]]*\]/", $column, $rankCountRecord);
 
                $bracktedString =  $rankCountRecord[0][0];
 

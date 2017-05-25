@@ -60,12 +60,12 @@ $(document).ready(
 		});
 
 		blastTable = $('#blastresults').DataTable( {
-			// "columnDefs": [
-			// 	{
-			// 		"targets": [ 1 ],
-			// 		"visible": false,
-			// 		"searchable": false
-			// 	}],
+			"columnDefs": [
+				{
+					"targets": [ 1 ],
+					"visible": false,
+					"searchable": false
+				}],
 				"ajax": 'users/'+ userid +'/blastresults.json',
 				"bDestroy": true,
 				"oLanguage": {
