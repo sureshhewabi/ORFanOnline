@@ -24,4 +24,23 @@ Route::get('/results', function () {
     return view('results');
 });
 
+
 Route::resource('input','InputController');
+
+
+Route::post('/saveresult','ResultController@saveResult');
+
+Route::get('/readresult','ResultController@readResultFile');
+
+
+Route::get('/savedresultslist', function () {
+    return view('resultsList');
+});
+
+
+
+Route::get('/previewsave/{result_id}', 'ResultController@previewResult')->name('savedresult');
+
+Route::resource('clamp', 'ClampController');
+
+

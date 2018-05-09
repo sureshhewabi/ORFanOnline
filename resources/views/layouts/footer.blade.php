@@ -15,7 +15,7 @@
   </div>
   <div class="footer-copyright">
     <div class="container">
-      © 2017 Copyright
+      © Copyright 2017-2018
       <a class="grey-text text-lighten-4 right" href="mailto:sureshhewabi@gmail.com?cc=vinodh@thegunasekeras.org,richgun01@gmail.com&Subject=ORFanID%20Online%20Issues">Contact Us</a>
     </div>
   </div>

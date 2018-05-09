@@ -28,10 +28,19 @@ class InputController extends Controller
 
       // retreive data from the input form
       $organism = $request->input('organismName');
+	$taxonomyLevels = $request->input('taxonomyLevels');
+
       // eg: Escherichia coli str. K-12 substr. MG1655 (511145)
       // split string by open bracket and remove the last characher
       // which is the closing bracket to extract Taxonomy ID
       $organismTaxId = substr(explode( "(", $organism )[1],0,-1);
+
+
+	//take the organisal name eg :Escherichia coli str. K-12 substr. MG1655  from  Escherichia coli str. K-12 substr. MG1655 (511145)
+	$organismName = explode( "(", $organism )[0];
+	Log::debug('organism : '.$organismName."Taxid:".$organismTaxId." Taxlevel ".$taxonomyLevels);
+
+
       // FASTA gene sequence
       $content = $request->input('genesequence');
 
@@ -61,8 +70,8 @@ class InputController extends Controller
         if( is_null($out) ){
            Log::debug('extractIdsFromFasta location : '.$extractIdsFromFasta.' '.$inputfile.' '.$IDoutputFile);
         }
-
-
+	
+	  
         # ============== Run BLASTP programme ==============
 
         # full file path where blastp programme installed in local computer
@@ -80,14 +89,21 @@ class InputController extends Controller
         # use online blast or blast in local computer
         $defalt_blastmethod = "online";
         # blast command
-        $blastcommand = $blastscript." -query ".$inputfile." -db nr -outfmt 6 -max_target_seqs ".$default_maxtargetseq." -evalue ".$default_maxevalue." -out ".$blastoutputFile." -remote";
-        //                "-entrez_query organism+"[Organism]"
-
+	
+	//if ($organismName=="All"){
+//$blastcommand = $blastscript." -query ".$inputfile." -db nr -outfmt 6 -max_target_seqs ".$default_maxtargetseq." -evalue ".$default_maxevalue." -out ".$blastoutputFile." -remote ";
+	//}else{
+$blastcommand = $blastscript." -query ".$inputfile." -db nr -outfmt 6 -max_target_seqs ".$default_maxtargetseq." -evalue ".$default_maxevalue." -out ".$blastoutputFile." -remote -entrez_query \"".$taxonomyLevels."[Organism]\"";
+        //    -entrez_query ".$organismName."[Organism]  "-entrez_query organism+"[Organism]"
+	//}
+    
+//$blastcommand = $blastscript." -query ".$inputfile." -db nr -outfmt 6 -max_target_seqs ".$default_maxtargetseq." -evalue ".$default_maxevalue." -out ".$blastoutputFile." -remote  -entrez_query \"".$organismTaxId."[Taxonomy ID]\"";
        // initialise to null
        $out = NULL;
        $out = shell_exec($blastcommand);
        if( is_null($out) ){
           Log::warning('No output produced by BLASTP');
+
           Log::debug('BLASTP command : '.$blastcommand);
        }
 
@@ -95,6 +111,10 @@ class InputController extends Controller
         $metadata->blast_evalue = $default_maxevalue;
         $metadata->blast_db = "nr";
         $metadata->blast_max_hits = $default_maxtargetseq;
+ $metadata->taxonomyLevels =$taxonomyLevels;
+$metadata->organism =$organism;
+
+
 
         # ============== Run ORFanFinder ==============
 

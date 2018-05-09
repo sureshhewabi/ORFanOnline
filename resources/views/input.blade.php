@@ -12,13 +12,32 @@
 <main>
 	{!! Form::open(['route' => 'input.store','method' => 'POST']) !!}
 	<div class="row">
-		<div class="col s12">
+		<!--<div class="col s12">
 				<div class="input-field col offset-s1 s10">
 					<textarea id="genesequence" name="genesequence" class="materialize-textarea">
 					</textarea>
 					<label for="genesequence">Protein Sequence</label>
 				</div>
-		</div>
+		</div>-->
+  <div class="col s12">
+                <div class="input-field col offset-s1 s8">
+                    <textarea id="genesequence" hight="100px;overflow-y: auto;" name="genesequence" class="materialize-textarea">
+                    </textarea>
+                    <label for="genesequence">Protein Sequence</label>
+                </div>
+                <div class="input-field col s2">
+                <div class="file-field input-field">
+                    <div class="btn">
+                   <span>Browse</span>
+                     <input id="fastafile"  type="file" accept=".fasta" onchange="setFileContnet(this.value);">
+                  </div>
+                  <div class="file-path-wrapper">
+                     <input class="file-path validate"  id="fastaFileName" type="text" placeholder="Upload file">
+                  </div>
+                  </div>
+                </div>
+        </div>
+
 	</div>
 	<div class="row">
 		<div class="col s6">
@@ -62,6 +81,28 @@
 	 		</button>
 		</div>
 	</div>
+	  <div id="modal1" class="modal" >
+    <div class="modal-content">
+      <h6>  ORFanID In Progress.... </h6>
+	   	<div class="progress">
+      		<div class="indeterminate"></div>
+		</div>
+		<div class="row">
+		<div class="col s12">
+			<div class="col offset-s2 s1">
+					
+				</div>
+	       <div  class="col s4"> 
+		  <img src="images/loading4.gif" alt="Loading">
+		   </div > 
+		   </div>
+		   </div>
+      <!--<p>A bunch of text</p>-->
+    </div>
+    <div class="modal-footer">
+     <!-- <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Possible Close Implematioation</a> -->
+    </div>
+    </div>
 	{!! Form::close() !!}
 	</main>
 @endsection

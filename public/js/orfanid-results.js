@@ -1,6 +1,8 @@
 $(document).ready(
 	function() {
 
+
+
 		var orfanLevels;
 		var numberOfOrphanGenes;
 		var selectedBlastResults;
@@ -9,7 +11,7 @@ $(document).ready(
 		var userid = $('#username').text();
 		console.log("UserID: "+userid);
 
-		$.getJSON('users/'+ userid +'/ORFanGenesSummarychart.json',
+		$.getJSON('users/'+ userid +'/ORFanGenesSummaryChart.json',
 			function(json) {
 				orfanLevels = json.x;
 				numberOfOrphanGenes = json.y;
@@ -50,7 +52,7 @@ $(document).ready(
 			buttons: [['csv', 'print']],
 		});
 		$('#ORFanGenesSummary').DataTable( {
-			"ajax": 'users/'+ userid +'/ORFanGenesSummary.json',
+			"ajax":'users/'+ userid +'/ORFanGenesSummary.json',
 			"oLanguage": {
 				"sStripClasses": "",
 				"sSearch": "",
@@ -63,8 +65,8 @@ $(document).ready(
 			"columnDefs": [
 				{
 					"targets": [ 1 ],
-					"visible": false,
-					"searchable": false
+					"visible": true,
+					"searchable": true
 				}],
 				"ajax": 'users/'+ userid +'/blastresults.json',
 				"bDestroy": true,
@@ -98,7 +100,7 @@ $(document).ready(
 								// get selected orfan gene id
 								$('#selectedgeneid').html(geneid);
 								// filter the blast results based on the gene id selected by the user
-
+									$('#blastresults').dataTable().fnFilter(geneid);
 								//
 								// // blastTable = $('#blastresults').dataTable();
 								// $('#blastresults').append(filteredBlastResults(geneid));
@@ -119,3 +121,7 @@ $(document).ready(
 			// }
 
 		});
+
+
+// Save Resutls CODE
+

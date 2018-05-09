@@ -18,7 +18,7 @@
   <div class="nav-wrapper container">
       <a id="logo-container" href="#" class="brand-logo">ORFanID</a>
       <ul class="right hide-on-med-and-down">
-        <li><a href="input.jsp">Login</a></li>
+        <!--<li><a href="input.jsp">Login</a></li>-->
       </ul>
       <ul id="nav-mobile" class="side-nav">
         <li><a href="#">Navbar Link</a></li>
@@ -49,7 +49,8 @@
         <div class="col s12 center">
           <h3><i class="mdi-content-send brown-text"></i></h3>
           <h4>ORFanID</h4>
-          <p>ORFanID is a web-based software engine that identifies ORFan genes from the genomes of specified species or from a given list of DNA sequences. The scope of the search for orphan genes can be defined by the selection of the taxonomy level of interest. Detectable homologous sequences are found for candidate gene in the NCBI databases. From these findings the ORFanID engine identifies and depicts orphan genes. Results may be viewed and analyzed graphically for the purpose of scientific research and inquiry.</p>
+          <p>ORFanID is a web-based software engine that identifies ORFan genes from the genomes of specified species or from a given list of DNA sequences. The scope of the search for orphan genes can be defined by the selection of the taxonomy level of interest. Detectable homologous sequences are found for candidate gene in the NCBI databases. From these findings the ORFanID engine identifies and depicts orphan genes. Results may be viewed and analyzed graphically for the purpose of scientific research and inquiry.
+</p>
         </div>
       </div>
     </div>
@@ -80,14 +81,15 @@
           <div class="icon-block">
             <h2 class="center brown-text"><i class="material-icons">verified_user</i></h2>
             <h5 class="center">Biology</h5>
-            <p>Historically, gene function is known to be expressed through proteins. There are specific organisms that have been <strong>found</strong> with unique proteins expressed by orphan genes such as Hydra, various Mollusks, Salamander and others. It appears that the anatomy of Hydra is mediated by orphan genes that give rise to unique proteins. Similarly, the mantle of various Mollusks has been found to be expressed from orphan genes, while the regeration of salamander limbs are mediated by orphans (Dr. Paul Nelson, 2017)</p>
+            <p>Historically, gene function is known to be expressed through proteins. There are specific organisms that have been <strong>found </strong>with unique proteins expressed by orphan genes such as Hydra, various Mollusks, Salamander and others. It appears that the anatomy of Hydra is mediated by orphan genes that give rise to unique proteins. Similarly, the mantle of various Mollusks has been found to be expressed from orphan genes, while the regeration of salamander limbs are mediated by orphans (Dr. Paul Nelson, 2017)</p>
           </div>
         </div>
         <div class="col s12 m4">
           <div class="icon-block">
             <h2 class="center brown-text"><i class="material-icons">settings</i></h2>
             <h5 class="center">Discovery</h5>
-            <p>By identifying these unique DNA sequences, ORFanID can help discover the origin, function and other significance of orphan genes. The software is able to identify genes unique to genus, family, or species etc. at differing taxonomy levels. Based on the parameters specified, some of orphans (also called Taxonomy Restricted Genes) may or may not fall under the given classification for strict ORFans. &nbsp;As such, ORFanID can help delineate the actual sequence and function of <em>de novo</em> genes discovered in species and at all levels of the taxonomy tree. </p>
+            <p>By identifying these unique DNA sequences, ORFanID can help discover the origin, function and other significance of orphan genes. The software is able to identify genes unique to genus, family, or species etc. at differing taxonomy levels. Based on the parameters specified, some of orphans (also called Taxonomy Restricted Genes) may or may not fall under the given classification for strict ORFans. &nbsp; As such, ORFanID can help delineate the actual sequence and function of <em>de novo</em> genes discovered in species and at all levels of the taxonomy tree. 
+             </p>
           </div>
         </div>
       </div>
@@ -107,13 +109,14 @@
      <div class="container">
       <div class="row">
           <h5 class="grey-text text-lighten-4">References</h5>
-          <p class="grey-text text-lighten-4">Altschul, S.F., Gish, W., Miller, W., Myers, E.W. &amp; Lipman, D.J. (1990) "Basic local alignment search tool." J. Mol. Biol. 215:403-410</p>
-          <p class="grey-text text-lighten-4"> Alex Ekstrom, Yanbin Yin; ORFanFinder: automated identification of taxonomically restricted orphan genes. Bioinformatics 2016; 32 (13): 2053-2055. doi: 10.1093/bioinformatics/btw122 </p>
+          <p class="grey-text text-lighten-4">Altschul, S.F., Gish, W., Miller, W., Myers, E.W. & Lipman, D.J. (1990) "Basic local alignment search tool." J. Mol. Biol. 215:403-410</p>
+          <p class="grey-text text-lighten-4"> Ekstrom, A. & Yin, Y. (2016) "ORFanFinder: automated identification of taxonomically restricted orphan genes." Bioinformatics; 32 (13): 2053-2055. doi: 10.1093/bioinformatics/btw122 </p>
+	   <p class="grey-text text-lighten-4">Clamp, M., Fry, B., Kamal, M., Xie, X., Cuff, J., Lin, M.F., Kellis, K., Lindblad-Toh, K., and Lander, E. S. (2007) “Distinguishing protein-coding and noncoding genes in the human genome”. PNAS 2007 December, 104 (49) 19428-19433 </p>
       </div>
     </div>
     <div class="footer-copyright">
       <div class="container"><a class="brown-text text-lighten-3 center-align" href="#"></a>
-        <p class="center-align">Copyright &nbsp;© 2017</p>
+        <p class="center-align">Copyright &nbsp;© 2017-2018</p>
       </div>
     </div>
   </footer>

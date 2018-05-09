@@ -1,0 +1,3 @@
+List<String>selectedSpecies = Arrays.asList("4530", "511438");
+
+if(selectedSpecies.contains(column[0]))
