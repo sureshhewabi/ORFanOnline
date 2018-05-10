@@ -107,8 +107,9 @@ class InputController extends Controller
                 Log::debug('BLASTP command : ' . $blastcommand);
 //                $this->alert("Error: Failed to produce BLAST output! Please check your input file format and adjust blast advance parameters and retry!");
 //                $this->redirectToMain();
-            }else {
-                if (file_exists($blastoutputFile)) {
+            }
+//            else {
+//                if (file_exists($blastoutputFile)) {
 
                     // copy blast data to metadata
                     $metadata->blast_evalue = $default_maxevalue;
@@ -142,11 +143,11 @@ class InputController extends Controller
                         Log::warning('No output produced by ORFanCommand!');
                         Log::debug('ORFanCommand : ' . $ORFanCommand);
                     }
-                }else{
-                    Log::debug('blastoutputFile does not exist:' . $blastoutputFile);
-                    $this->alert("Failed to produce BLAST Outputfile! Please check your input file format and adjust blast advance parameters and retry!");
-                    $this->redirectToMain();
-                }
+//                }else{
+//                    Log::debug('blastoutputFile does not exist:' . $blastoutputFile);
+//                    $this->alert("Failed to produce BLAST Outputfile! Please check your input file format and adjust blast advance parameters and retry!");
+//                    $this->redirectToMain();
+//                }
 
 
                 // ============== Report Results ==============
@@ -234,7 +235,7 @@ class InputController extends Controller
                     $this->alert("Failed to produce ORFanFinder output file! Please check your input file format and adjust blast advance parameters and retry!");
                     $this->redirectToMain();
                 }
-            }
+//            }
         } else {
             return redirect('input');
         }
