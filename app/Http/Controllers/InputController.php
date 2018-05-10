@@ -103,11 +103,6 @@ class InputController extends Controller
             $out = shell_exec($blastcommand);
             Log::debug('Blasting Ended');
             Log::debug('Blast command returned : ' . $out);
-//            if (is_null($out)) {
-//                Log::warning('No output produced by BLASTP');
-//                $this->alert("Error: Failed to produce BLAST output! Please check your input file format and adjust blast advance parameters and retry!");
-//                $this->redirectToMain();
-//            } else {
                 if (file_exists($blastoutputFile)) {
 
                     // copy blast data to metadata
@@ -133,21 +128,21 @@ class InputController extends Controller
 
                     #ORFanFinder command
                     $ORFanCommand = $ORFanFinder . " -query " . $blastoutputFile . " -id " . $IDoutputFile . " -nodes " . $nodefile . " -names " . $namefile . " -db " . $database . " -tax " . $organismTaxId . " -threads 4" . " -out " . $ORFanFinderOutputfile;
+                    Log::debug('ORFanCommand : ' . $ORFanCommand);
 
                     // initialise to null
                     $out = NULL;
                     # Run ORFanFinder command
                     $out = shell_exec($ORFanCommand);
-                    if (is_null($out)) {
-                        Log::warning('No output produced by ORFanCommand!');
-                        Log::debug('ORFanCommand : ' . $ORFanCommand);
-                    }
+                    Log::debug('ORFanCommand Executed!');
+//                    if (is_null($out)) {
+//                        Log::warning('No output produced by ORFanCommand!');
+//                        Log::debug('ORFanCommand : ' . $ORFanCommand);
+//                    }
                 } else {
                     Log::warning('No output produced by BLASTP');
                     $this->alert("Error: Failed to produce BLAST output! Please check your input file format and adjust blast advance parameters and retry!");
-//                    $this->redirectToMain();
                     Log::debug('blastoutputFile does not exist:' . $blastoutputFile);
-//                    $this->alert("Failed to produce BLAST Outputfile! Please check your input file format and adjust blast advance parameters and retry!");
                     $this->redirectToMain();
                 }
 
@@ -228,7 +223,8 @@ class InputController extends Controller
                         $blastcontent = '{"data":' . json_encode($blastrecordsfullList) . '}';
                         // // save orphan genes in JSON format.
                         file_put_contents($blastresultsFile, $blastcontent);
-
+                        Log::debug('Process Successfully Completed!');
+                        Log::debug('===============================');
                     } else {
                         // error opening the file.
                     }
