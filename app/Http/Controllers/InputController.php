@@ -98,13 +98,15 @@ class InputController extends Controller
 
             // initialise to null
             $out = NULL;
+            Log::debug('Blasting Started');
             $out = shell_exec($blastcommand);
+            Log::debug('Blasting Ended');
             Log::debug('Blast command returned : ' . $out);
             if (is_null($out)) {
                 Log::warning('No output produced by BLASTP');
                 Log::debug('BLASTP command : ' . $blastcommand);
-                $this->alert("Error: Failed to produce BLAST output! Please check your input file format and adjust blast advance parameters and retry!");
-                $this->redirectToMain();
+//                $this->alert("Error: Failed to produce BLAST output! Please check your input file format and adjust blast advance parameters and retry!");
+//                $this->redirectToMain();
             }else {
                 if (file_exists($blastoutputFile)) {
 
