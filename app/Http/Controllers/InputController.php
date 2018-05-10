@@ -99,7 +99,7 @@ class InputController extends Controller
             // initialise to null
             $out = NULL;
             $out = shell_exec($blastcommand);
-            Log::debug('Blast command returned : ' . out);
+            Log::debug('Blast command returned : ' . $out);
             if (is_null($out)) {
                 Log::warning('No output produced by BLASTP');
                 Log::debug('BLASTP command : ' . $blastcommand);
