@@ -103,7 +103,7 @@ class InputController extends Controller
                 Log::warning('No output produced by BLASTP');
                 Log::debug('BLASTP command : ' . $blastcommand);
                 $this->alert("Failed to produce BLAST output! Please check your input file format and adjust blast advance parameters and retry!");
-                return redirect('input');
+                $this->redirectToMain();
             }else {
                 if (file_exists($blastoutputFile)) {
 
@@ -141,7 +141,7 @@ class InputController extends Controller
                     }
                 }else{
                     $this->alert("Failed to produce BLAST Outputfile! Please check your input file format and adjust blast advance parameters and retry!");
-                    return redirect('input');
+                    $this->redirectToMain();
                 }
 
 
@@ -228,7 +228,7 @@ class InputController extends Controller
                 } else {
                     print "ORFanFinderOutputfile not available<br>" . $ORFanFinderOutputfile . "<br>";
                     $this->alert("Failed to produce ORFanFinder output file! Please check your input file format and adjust blast advance parameters and retry!");
-                    return redirect('input');
+                    $this->redirectToMain();
                 }
             }
         } else {
@@ -286,5 +286,8 @@ class InputController extends Controller
 
     function alert($msg) {
         echo "<script type='text/javascript'>alert('$msg');</script>";
+    }
+    function redirectToMain() {
+        echo "<script type='text/javascript'>window.location.href='input';</script>";
     }
 }
