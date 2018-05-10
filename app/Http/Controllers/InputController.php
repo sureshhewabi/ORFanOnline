@@ -91,9 +91,9 @@ class InputController extends Controller
             # blast command
 
             //if ($organismName=="All"){
-                //$blastcommand = $blastscript." -query ".$inputfile." -db nr -outfmt 6 -max_target_seqs ".$default_maxtargetseq." -evalue ".$default_maxevalue." -out ".$blastoutputFile." -remote ";
+            //$blastcommand = $blastscript." -query ".$inputfile." -db nr -outfmt 6 -max_target_seqs ".$default_maxtargetseq." -evalue ".$default_maxevalue." -out ".$blastoutputFile." -remote ";
             //}else{
-                $blastcommand = $blastscript . " -query " . $inputfile . " -db nr -outfmt 6 -max_target_seqs " . $default_maxtargetseq . " -evalue " . $default_maxevalue . " -out " . $blastoutputFile . " -remote -entrez_query \"" . $taxonomyLevels . "[Organism]\"";
+            $blastcommand = $blastscript . " -query " . $inputfile . " -db nr -outfmt 6 -max_target_seqs " . $default_maxtargetseq . " -evalue " . $default_maxevalue . " -out " . $blastoutputFile . " -remote -entrez_query \"" . $taxonomyLevels . "[Organism]\"";
             //}
 
             // initialise to null
@@ -105,11 +105,10 @@ class InputController extends Controller
             if (is_null($out)) {
                 Log::warning('No output produced by BLASTP');
                 Log::debug('BLASTP command : ' . $blastcommand);
-//                $this->alert("Error: Failed to produce BLAST output! Please check your input file format and adjust blast advance parameters and retry!");
-//                $this->redirectToMain();
-            }
-//            else {
-//                if (file_exists($blastoutputFile)) {
+                $this->alert("Error: Failed to produce BLAST output! Please check your input file format and adjust blast advance parameters and retry!");
+                $this->redirectToMain();
+            } else {
+                if (file_exists($blastoutputFile)) {
 
                     // copy blast data to metadata
                     $metadata->blast_evalue = $default_maxevalue;
@@ -143,11 +142,11 @@ class InputController extends Controller
                         Log::warning('No output produced by ORFanCommand!');
                         Log::debug('ORFanCommand : ' . $ORFanCommand);
                     }
-//                }else{
-//                    Log::debug('blastoutputFile does not exist:' . $blastoutputFile);
-//                    $this->alert("Failed to produce BLAST Outputfile! Please check your input file format and adjust blast advance parameters and retry!");
-//                    $this->redirectToMain();
-//                }
+                } else {
+                    Log::debug('blastoutputFile does not exist:' . $blastoutputFile);
+                    $this->alert("Failed to produce BLAST Outputfile! Please check your input file format and adjust blast advance parameters and retry!");
+                    $this->redirectToMain();
+                }
 
 
                 // ============== Report Results ==============
@@ -235,7 +234,7 @@ class InputController extends Controller
                     $this->alert("Failed to produce ORFanFinder output file! Please check your input file format and adjust blast advance parameters and retry!");
                     $this->redirectToMain();
                 }
-//            }
+            }
         } else {
             return redirect('input');
         }
@@ -289,10 +288,13 @@ class InputController extends Controller
         return $blastrecordsList;
     }
 
-    function alert($msg) {
+    function alert($msg)
+    {
         echo "<script type='text/javascript'>alert('$msg');</script>";
     }
-    function redirectToMain() {
+
+    function redirectToMain()
+    {
         echo "<script type='text/javascript'>window.location.href='input';</script>";
     }
 }
