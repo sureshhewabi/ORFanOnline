@@ -102,7 +102,7 @@ class InputController extends Controller
             if (is_null($out)) {
                 Log::warning('No output produced by BLASTP');
                 Log::debug('BLASTP command : ' . $blastcommand);
-                $this->alert("Failed to produce BLAST output! Please check your input file format and adjust blast advance parameters and retry!");
+                $this->alert("Error: Failed to produce BLAST output! Please check your input file format and adjust blast advance parameters and retry!");
                 $this->redirectToMain();
             }else {
                 if (file_exists($blastoutputFile)) {
