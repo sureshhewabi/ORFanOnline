@@ -223,6 +223,7 @@ class InputController extends Controller
                         $blastcontent = '{"data":' . json_encode($blastrecordsfullList) . '}';
                         // // save orphan genes in JSON format.
                         file_put_contents($blastresultsFile, $blastcontent);
+                        Log::debug('Final results save in: ' . $blastresultsFile);
                         Log::debug('Process Successfully Completed!');
                         Log::debug('===============================');
                     } else {
