@@ -100,7 +100,6 @@ class InputController extends Controller
             $out = NULL;
             Log::debug('Blasting Started');
             $out = shell_exec($blastcommand);
-            sleep(300);
             Log::debug('Blasting Ended');
             Log::debug('Blast command returned : ' . $out);
             if (is_null($out)) {
