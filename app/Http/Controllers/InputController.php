@@ -99,6 +99,7 @@ class InputController extends Controller
             // initialise to null
             $out = NULL;
             $out = shell_exec($blastcommand);
+            Log::debug('Blast command returned : ' . out);
             if (is_null($out)) {
                 Log::warning('No output produced by BLASTP');
                 Log::debug('BLASTP command : ' . $blastcommand);
@@ -140,6 +141,7 @@ class InputController extends Controller
                         Log::debug('ORFanCommand : ' . $ORFanCommand);
                     }
                 }else{
+                    Log::debug('blastoutputFile does not exist:' . $blastoutputFile);
                     $this->alert("Failed to produce BLAST Outputfile! Please check your input file format and adjust blast advance parameters and retry!");
                     $this->redirectToMain();
                 }
