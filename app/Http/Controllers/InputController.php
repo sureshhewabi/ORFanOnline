@@ -103,6 +103,12 @@ class InputController extends Controller
             $out = shell_exec($blastcommand);
             Log::debug('Blasting Ended');
             Log::debug('Blast command returned : ' . $out);
+            if (is_null($out)) {
+                Log::warning('No output produced by BLASTP');
+                $this->alert("Error: Failed to produce BLAST output! Please check your input file format and adjust blast advance parameters and retry!");
+                Log::debug('blastoutputFile does not exist:' . $blastoutputFile);
+                $this->redirectToMain();
+            } else {
                 if (file_exists($blastoutputFile)) {
 
                     // copy blast data to metadata
@@ -135,10 +141,10 @@ class InputController extends Controller
                     # Run ORFanFinder command
                     $out = shell_exec($ORFanCommand);
                     Log::debug('ORFanCommand Executed!');
-//                    if (is_null($out)) {
-//                        Log::warning('No output produced by ORFanCommand!');
-//                        Log::debug('ORFanCommand : ' . $ORFanCommand);
-//                    }
+                    if (is_null($out)) {
+                        Log::warning('No output produced by ORFanCommand!');
+                        Log::debug('ORFanCommand : ' . $ORFanCommand);
+                    }
                 } else {
                     Log::warning('No output produced by BLASTP');
                     $this->alert("Error: Failed to produce BLAST output! Please check your input file format and adjust blast advance parameters and retry!");
@@ -234,7 +240,7 @@ class InputController extends Controller
                     $this->alert("Failed to produce ORFanFinder output file! Please check your input file format and adjust blast advance parameters and retry!");
                     $this->redirectToMain();
                 }
-//            }
+            }
         } else {
             return redirect('input');
         }
