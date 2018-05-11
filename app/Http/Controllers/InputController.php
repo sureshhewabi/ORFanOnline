@@ -103,144 +103,144 @@ class InputController extends Controller
             $out = shell_exec($blastcommand);
             Log::debug('Blasting Ended');
             Log::debug('Blast command returned : ' . $out);
-            if (is_null($out)) {
+//            if (is_null($out)) {
+//                Log::warning('No output produced by BLASTP');
+//                $this->alert("Error: Failed to produce BLAST output! Please check your input file format and adjust blast advance parameters and retry!");
+//                Log::debug('blastoutputFile does not exist:' . $blastoutputFile);
+//                $this->redirectToMain();
+//            } else {
+            if (file_exists($blastoutputFile)) {
+
+                // copy blast data to metadata
+                $metadata->blast_evalue = $default_maxevalue;
+                $metadata->blast_db = "nr";
+                $metadata->blast_max_hits = $default_maxtargetseq;
+                $metadata->taxonomyLevels = $taxonomyLevels;
+                $metadata->organism = $organism;
+
+
+                # ============== Run ORFanFinder ==============
+
+                # full file path where ORFanFinder programme installed in local computer
+                $ORFanFinder = config('orfanid.ORFanFinder');
+                #node File
+                $nodefile = config('orfanid.nodefile');
+                #name File
+                $namefile = config('orfanid.namefile');
+                # database
+                $database = config('orfanid.database');
+                # orfanFinder output File
+                $ORFanFinderOutputfile = $userdir . "orfanResults.csv";
+
+                #ORFanFinder command
+                $ORFanCommand = $ORFanFinder . " -query " . $blastoutputFile . " -id " . $IDoutputFile . " -nodes " . $nodefile . " -names " . $namefile . " -db " . $database . " -tax " . $organismTaxId . " -threads 4" . " -out " . $ORFanFinderOutputfile;
+                Log::debug('ORFanCommand : ' . $ORFanCommand);
+
+                // initialise to null
+                $out = NULL;
+                # Run ORFanFinder command
+                $out = shell_exec($ORFanCommand);
+                Log::debug('ORFanCommand Executed!');
+                if (is_null($out)) {
+                    Log::warning('No output produced by ORFanCommand!');
+                    Log::debug('ORFanCommand : ' . $ORFanCommand);
+                }
+            } else {
                 Log::warning('No output produced by BLASTP');
                 $this->alert("Error: Failed to produce BLAST output! Please check your input file format and adjust blast advance parameters and retry!");
                 Log::debug('blastoutputFile does not exist:' . $blastoutputFile);
                 $this->redirectToMain();
-            } else {
-                if (file_exists($blastoutputFile)) {
-
-                    // copy blast data to metadata
-                    $metadata->blast_evalue = $default_maxevalue;
-                    $metadata->blast_db = "nr";
-                    $metadata->blast_max_hits = $default_maxtargetseq;
-                    $metadata->taxonomyLevels = $taxonomyLevels;
-                    $metadata->organism = $organism;
-
-
-                    # ============== Run ORFanFinder ==============
-
-                    # full file path where ORFanFinder programme installed in local computer
-                    $ORFanFinder = config('orfanid.ORFanFinder');
-                    #node File
-                    $nodefile = config('orfanid.nodefile');
-                    #name File
-                    $namefile = config('orfanid.namefile');
-                    # database
-                    $database = config('orfanid.database');
-                    # orfanFinder output File
-                    $ORFanFinderOutputfile = $userdir . "orfanResults.csv";
-
-                    #ORFanFinder command
-                    $ORFanCommand = $ORFanFinder . " -query " . $blastoutputFile . " -id " . $IDoutputFile . " -nodes " . $nodefile . " -names " . $namefile . " -db " . $database . " -tax " . $organismTaxId . " -threads 4" . " -out " . $ORFanFinderOutputfile;
-                    Log::debug('ORFanCommand : ' . $ORFanCommand);
-
-                    // initialise to null
-                    $out = NULL;
-                    # Run ORFanFinder command
-                    $out = shell_exec($ORFanCommand);
-                    Log::debug('ORFanCommand Executed!');
-                    if (is_null($out)) {
-                        Log::warning('No output produced by ORFanCommand!');
-                        Log::debug('ORFanCommand : ' . $ORFanCommand);
-                    }
-                } else {
-                    Log::warning('No output produced by BLASTP');
-                    $this->alert("Error: Failed to produce BLAST output! Please check your input file format and adjust blast advance parameters and retry!");
-                    Log::debug('blastoutputFile does not exist:' . $blastoutputFile);
-                    $this->redirectToMain();
-                }
-
-
-                // ============== Report Results ==============
-
-                $ORFanGenesSummary = array();
-                $ORFanGenesSummaryList = array();
-                $orfanGenesList = array();
-                $blastrecordsfullList = array();
-
-                if (file_exists($ORFanFinderOutputfile)) {
-                    // open file in read only mode
-                    $handle = fopen($ORFanFinderOutputfile, "r");
-                    // if successfully opened the file
-                    if ($handle) {
-                        // read file line by line
-                        while (($line = fgets($handle)) !== false) {
-                            // split line by tab delimmeter
-                            $columns = explode("\t", $line);
-
-                            // first column contains the Gene ID (column[0])
-                            // remove the last pipe charactor (|) which is not required for gene ID
-                            $geneID = substr($columns[0], 0, -1);
-
-                            // check if string has '-' charactor
-                            // eg: class ORFan - Gammaproteobacteria
-                            if (strpos($columns[1], '-') !== false) {
-                                // split second column to get ORF Gene Level and the Taxonomy Level
-                                list($orfanLevel, $taxonomyLevel) = explode(" - ", $columns[1]);
-                                $blastrecordsfullList = array_merge($blastrecordsfullList, $this->extractBlastHits($geneID, $columns));
-                            } elseif (strpos($columns[1], 'native gene') !== false) {
-                                // split second column to get ORF Gene Level and the Taxonomy Level
-                                list($orfanLevel, $taxonomyLevel) = array($columns[1], '');
-                                $blastrecordsfullList = array_merge($blastrecordsfullList, $this->extractBlastHits($geneID, $columns));
-                            } else { // strict ORFan does not have taxonomy or any other details
-                                list($orfanLevel, $taxonomyLevel) = array($columns[1], '');
-                            }
-
-                            $orfanGenes = array($geneID, 'Not Available', $orfanLevel, $taxonomyLevel);
-                            array_push($orfanGenesList, $orfanGenes);
-
-                            // create orfan gene summary Array
-                            if (array_key_exists($orfanLevel, $ORFanGenesSummary)) {
-                                $ORFanGenesSummary[$orfanLevel] = $ORFanGenesSummary[$orfanLevel] + 1;
-                            } else {
-                                $ORFanGenesSummary[$orfanLevel] = 1;
-                            }
-                        }
-                        fclose($handle);
-
-                        // copy $ORFanGenesSummary to $ORFanGenesSummaryList array in array format
-                        // eg: ["class ORFan", 1]
-                        foreach ($ORFanGenesSummary as $key => $value) {
-                            array_push($ORFanGenesSummaryList, array($key, $value));
-                        }
-
-                        // create a JSON file for summary chart
-                        $ORFanGenesSummaryChartFile = $userdir . "ORFanGenesSummaryChart.json";
-                        $ORFanGenesSummaryChartContent = '{"x":' . json_encode(array_keys($ORFanGenesSummary)) . ',' .
-                            '"y":' . json_encode(array_values($ORFanGenesSummary)) .
-                            '}';
-                        // save orphan genes in JSON format.
-                        file_put_contents($ORFanGenesSummaryChartFile, $ORFanGenesSummaryChartContent);
-
-                        $ORFanGenesSummaryFile = $userdir . "ORFanGenesSummary.json";
-                        $ORFanGenesSummaryContent = '{"data":' . json_encode($ORFanGenesSummaryList) . '}';
-                        // save orphan genes in JSON format.
-                        file_put_contents($ORFanGenesSummaryFile, $ORFanGenesSummaryContent);
-
-                        $ORFanGenesFile = $userdir . "ORFanGenes.json";
-                        $content = '{"data":' . json_encode($orfanGenesList) . '}';
-                        // // save orphan genes in JSON format.
-                        file_put_contents($ORFanGenesFile, $content);
-
-                        // Save blast results
-                        $blastresultsFile = $userdir . "blastresults.json";
-                        $blastcontent = '{"data":' . json_encode($blastrecordsfullList) . '}';
-                        // // save orphan genes in JSON format.
-                        file_put_contents($blastresultsFile, $blastcontent);
-                        Log::debug('Final results save in: ' . $blastresultsFile);
-                        Log::debug('Process Successfully Completed!');
-                        Log::debug('===============================');
-                    } else {
-                        // error opening the file.
-                    }
-                } else {
-                    print "ORFanFinderOutputfile not available<br>" . $ORFanFinderOutputfile . "<br>";
-                    $this->alert("Failed to produce ORFanFinder output file! Please check your input file format and adjust blast advance parameters and retry!");
-                    $this->redirectToMain();
-                }
             }
+
+
+            // ============== Report Results ==============
+
+            $ORFanGenesSummary = array();
+            $ORFanGenesSummaryList = array();
+            $orfanGenesList = array();
+            $blastrecordsfullList = array();
+
+            if (file_exists($ORFanFinderOutputfile)) {
+                // open file in read only mode
+                $handle = fopen($ORFanFinderOutputfile, "r");
+                // if successfully opened the file
+                if ($handle) {
+                    // read file line by line
+                    while (($line = fgets($handle)) !== false) {
+                        // split line by tab delimmeter
+                        $columns = explode("\t", $line);
+
+                        // first column contains the Gene ID (column[0])
+                        // remove the last pipe charactor (|) which is not required for gene ID
+                        $geneID = substr($columns[0], 0, -1);
+
+                        // check if string has '-' charactor
+                        // eg: class ORFan - Gammaproteobacteria
+                        if (strpos($columns[1], '-') !== false) {
+                            // split second column to get ORF Gene Level and the Taxonomy Level
+                            list($orfanLevel, $taxonomyLevel) = explode(" - ", $columns[1]);
+                            $blastrecordsfullList = array_merge($blastrecordsfullList, $this->extractBlastHits($geneID, $columns));
+                        } elseif (strpos($columns[1], 'native gene') !== false) {
+                            // split second column to get ORF Gene Level and the Taxonomy Level
+                            list($orfanLevel, $taxonomyLevel) = array($columns[1], '');
+                            $blastrecordsfullList = array_merge($blastrecordsfullList, $this->extractBlastHits($geneID, $columns));
+                        } else { // strict ORFan does not have taxonomy or any other details
+                            list($orfanLevel, $taxonomyLevel) = array($columns[1], '');
+                        }
+
+                        $orfanGenes = array($geneID, 'Not Available', $orfanLevel, $taxonomyLevel);
+                        array_push($orfanGenesList, $orfanGenes);
+
+                        // create orfan gene summary Array
+                        if (array_key_exists($orfanLevel, $ORFanGenesSummary)) {
+                            $ORFanGenesSummary[$orfanLevel] = $ORFanGenesSummary[$orfanLevel] + 1;
+                        } else {
+                            $ORFanGenesSummary[$orfanLevel] = 1;
+                        }
+                    }
+                    fclose($handle);
+
+                    // copy $ORFanGenesSummary to $ORFanGenesSummaryList array in array format
+                    // eg: ["class ORFan", 1]
+                    foreach ($ORFanGenesSummary as $key => $value) {
+                        array_push($ORFanGenesSummaryList, array($key, $value));
+                    }
+
+                    // create a JSON file for summary chart
+                    $ORFanGenesSummaryChartFile = $userdir . "ORFanGenesSummaryChart.json";
+                    $ORFanGenesSummaryChartContent = '{"x":' . json_encode(array_keys($ORFanGenesSummary)) . ',' .
+                        '"y":' . json_encode(array_values($ORFanGenesSummary)) .
+                        '}';
+                    // save orphan genes in JSON format.
+                    file_put_contents($ORFanGenesSummaryChartFile, $ORFanGenesSummaryChartContent);
+
+                    $ORFanGenesSummaryFile = $userdir . "ORFanGenesSummary.json";
+                    $ORFanGenesSummaryContent = '{"data":' . json_encode($ORFanGenesSummaryList) . '}';
+                    // save orphan genes in JSON format.
+                    file_put_contents($ORFanGenesSummaryFile, $ORFanGenesSummaryContent);
+
+                    $ORFanGenesFile = $userdir . "ORFanGenes.json";
+                    $content = '{"data":' . json_encode($orfanGenesList) . '}';
+                    // // save orphan genes in JSON format.
+                    file_put_contents($ORFanGenesFile, $content);
+
+                    // Save blast results
+                    $blastresultsFile = $userdir . "blastresults.json";
+                    $blastcontent = '{"data":' . json_encode($blastrecordsfullList) . '}';
+                    // // save orphan genes in JSON format.
+                    file_put_contents($blastresultsFile, $blastcontent);
+                    Log::debug('Final results save in: ' . $blastresultsFile);
+                    Log::debug('Process Successfully Completed!');
+                    Log::debug('===============================');
+                } else {
+                    // error opening the file.
+                }
+            } else {
+                print "ORFanFinderOutputfile not available<br>" . $ORFanFinderOutputfile . "<br>";
+                $this->alert("Failed to produce ORFanFinder output file! Please check your input file format and adjust blast advance parameters and retry!");
+                $this->redirectToMain();
+            }
+//            }
         } else {
             return redirect('input');
         }
